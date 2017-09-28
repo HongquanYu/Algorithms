@@ -31,7 +31,7 @@ public class PalindromicSubstrings_647 {
     		int idx = s.length() - 1;
     		int succ = idx + 1;
     		int pred = idx - 1;
-    		while (succ < global.length() && pred >= 0 && global.charAt(succ) == global.charAt(pred) && global.charAt(succ) != global.charAt(idx)) {
+    		while (succ < global.length() && pred >= 0 && global.charAt(succ) == global.charAt(pred) && global.charAt(succ) != global.charAt(succ-1)) {
     			count_1++;
     			succ++;
     			pred--;
