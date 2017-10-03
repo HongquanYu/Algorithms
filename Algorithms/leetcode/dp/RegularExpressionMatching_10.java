@@ -48,12 +48,12 @@ public class RegularExpressionMatching_10 {
 		if (memo[i][j] != null) {
 			return memo[i][j] == Result.TRUE;
 		}
+		
 		boolean ans;
 		if (j == pattern.length()) {
 			ans = i == text.length();
 		} else {
-			boolean first_match = (i < text.length()
-					&& (pattern.charAt(j) == text.charAt(i) || pattern.charAt(j) == '.'));
+			boolean first_match = (i < text.length() && (pattern.charAt(j) == text.charAt(i) || pattern.charAt(j) == '.'));
 
 			if (j + 1 < pattern.length() && pattern.charAt(j + 1) == '*') {
 				ans = (dp(i, j + 2, text, pattern) || first_match && dp(i + 1, j, text, pattern));
