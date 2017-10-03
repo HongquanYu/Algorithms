@@ -2,48 +2,86 @@ package dp;
 
 public class RegularExpressionMatching_10 {
 	
-	public boolean isMatch(String s, String p) {
-	    /*
-	    DP(i, j) means s where s.len = i matches p where p.len = j
-	    
-	    			DP(i - 1, j - 1). 	If s[i] == p[j] || p[j] == '.'
-	    	
-	    DP(i, j) =  DP(i, j - 2). 		0 occurrence						---	|
-	    																		|--	if p[j] == '*'
-	    			DP(i - 1, j)		If s[i] == p[j-1] || p[j-1] == '.'	---	|
-	    */			
-	   
-
-	    if (!p.isEmpty() && p.charAt(0) == '*')								// invalid p
-	        return false;
-
-	    boolean[][] f = new boolean[s.length() + 1][p.length() + 1];
-
-	    f[0][0] = true;														// initialize f(0,0)
-
-	    // f(k, 0) and f(0, 2k-1) where k >= 1 are false by default
-
-	    // initialize f(0, 2k) where p_2k-1 = * for any k >= 1
-	    
-		for (int j = 1; j < p.length(); j += 2) {
-			if (p.charAt(j) == '*')
-				f[0][j + 1] = f[0][j - 1];
+	/* The recursion solution is pretty straightforward.
+	 * The key is to find that if a star is present in the pattern, it will be the second position of
+	 * pattern.
+	 * Then, we may ignore this part of pattern, or deleting a matching character in the text.
+	 * If we have a match on the remaining strings after any of these operations, then the initial
+	 * input matched.  */
+	public boolean isMatch(String text, String pattern) {
+		if (pattern.isEmpty())
+			return text.isEmpty();
+		
+		/* The first_match solves following one to one relationships:
+		 * 1, 'a' - 'a': same character mapping
+		 * 2, 'a'  - '.' mapping 
+		 * The mapping relationship will also be used at the middle of strings
+		 * as recursion going deep so it is a base case */
+		
+		boolean first_match = (!text.isEmpty() && (pattern.charAt(0) == text.charAt(0) || pattern.charAt(0) == '.'));
+		
+		/* Reduction */
+		if (pattern.length() >= 2 && pattern.charAt(1) == '*') {
+			return (isMatch(text, pattern.substring(2)) || (first_match && isMatch(text.substring(1), pattern)));
+		} else {
+			return first_match && isMatch(text.substring(1), pattern.substring(1));
 		}
+	}
+	
+	/* DP solution 
+	 * dp(i, j): does text[0, i] matches pattern[0, j]?
+	 * */
+	
+	
+	/* Top-down DP solution */
+	
+	enum Result { TRUE, FALSE }
 
-		for (int i = 1; i <= s.length(); i++) {
-			for (int j = 1; j <= p.length(); j++) {
-				if (p.charAt(j - 1) != '*')
-					f[i][j] = f[i - 1][j - 1] && isCharMatch(s.charAt(i - 1), p.charAt(j - 1));
-				else
-					f[i][j] = f[i][j - 2] || f[i - 1][j] && isCharMatch(s.charAt(i - 1), p.charAt(j - 2));
-			}
-		}
+	Result[][] memo;
 
-	    return f[s.length()][p.length()];
+	public boolean isMatch2(String text, String pattern) {
+		memo = new Result[text.length() + 1][pattern.length() + 1];
+		return dp(0, 0, text, pattern);
 	}
 
-	// no * in p
-	private boolean isCharMatch(char s, char p) {
-	    return p == '.' || s == p;
+	public boolean dp(int i, int j, String text, String pattern) {
+		if (memo[i][j] != null) {
+			return memo[i][j] == Result.TRUE;
+		}
+		boolean ans;
+		if (j == pattern.length()) {
+			ans = i == text.length();
+		} else {
+			boolean first_match = (i < text.length()
+					&& (pattern.charAt(j) == text.charAt(i) || pattern.charAt(j) == '.'));
+
+			if (j + 1 < pattern.length() && pattern.charAt(j + 1) == '*') {
+				ans = (dp(i, j + 2, text, pattern) || first_match && dp(i + 1, j, text, pattern));
+			} else {
+				ans = first_match && dp(i + 1, j + 1, text, pattern);
+			}
+		}
+		memo[i][j] = ans ? Result.TRUE : Result.FALSE;
+		return ans;
+	}
+	
+	/* Bottom-Up Variation */
+	
+	public boolean isMatch3(String text, String pattern) {
+		boolean[][] dp = new boolean[text.length() + 1][pattern.length() + 1];
+		dp[text.length()][pattern.length()] = true;
+
+		for (int i = text.length(); i >= 0; i--) {
+			for (int j = pattern.length() - 1; j >= 0; j--) {
+				boolean first_match = (i < text.length()
+						&& (pattern.charAt(j) == text.charAt(i) || pattern.charAt(j) == '.'));
+				if (j + 1 < pattern.length() && pattern.charAt(j + 1) == '*') {
+					dp[i][j] = dp[i][j + 2] || first_match && dp[i + 1][j];
+				} else {
+					dp[i][j] = first_match && dp[i + 1][j + 1];
+				}
+			}
+		}
+		return dp[0][0];
 	}
 }
