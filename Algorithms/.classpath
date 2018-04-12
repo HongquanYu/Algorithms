@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="sort"/>
-	<classpathentry kind="src" path="leetcode"/>
-	<classpathentry kind="src" path="epi"/>
+	<classpathentry kind="src" path="Sort"/>
+	<classpathentry kind="src" path="Leetcode"/>
+	<classpathentry kind="src" path="EPI"/>
+	<classpathentry kind="src" path="Google"/>
+	<classpathentry kind="src" path="summary"/>
+	<classpathentry kind="src" path="OA"/>
+	<classpathentry kind="src" path="CCI"/>
+	<classpathentry kind="src" path="DataStructure"/>
+	<classpathentry kind="src" path="OperatingSystem"/>
+	<classpathentry kind="src" path="Interview"/>
+	<classpathentry kind="src" path="LintCode"/>
+	<classpathentry kind="src" path="utility"/>
 	<classpathentry kind="lib" path="/Users/Yu/Studio/Books/Algorithm/Algorithms_Princeton/algs4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
